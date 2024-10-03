@@ -1,7 +1,7 @@
 def introspection_info(obj):
   info = {}
   info['type'] = type(obj).__name__
-  info['attributes'] = [attr for attr in dir(obj) if not attr.startswith('__')]
+  info['attributes'] = [attr for attr in dir(obj) if not attr.startswith('__') and not callable(getattr(obj, attr))]
   info['methods'] = [method for method in dir(obj) if callable(getattr(obj, method)) and not method.startswith('__')]
   info['module'] = obj.__module__ if hasattr(obj, '__module__') else 'None'
   if isinstance(obj, type):
@@ -19,13 +19,16 @@ def introspection_info(obj):
   else:
     info['repr'] = repr(obj)
   return info
+
 class MyClass:
   def __init__(self, value):
     self.value = value
   def my_method(self):
     return f"Метод класса: {self.value}"
+
 my_object = MyClass(10)
 object_info = introspection_info(my_object)
 print(object_info)
+
 number_info = introspection_info(42)
 print(number_info)
